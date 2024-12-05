@@ -1,0 +1,209 @@
+<!doctype html>
+
+<html lang="ja">
+
+
+
+<head>
+
+    <meta charset="utf-8" />
+    <title>地図で歌詠みアプリ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href=https://fonts.googleapis.com/css?family=Open+Sans rel="stylesheet" />
+    <script src=https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js></script>
+    <link href=https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css rel="stylesheet" />
+ 
+<style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .marker {
+            background-color: #3FB1CE;
+            width:  20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div id="map"></div>
+
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1Ijoic2F0b2Nvcm9ybyIsImEiOiJjbTQ1YjljcjIwdjVwMm1teDVubndobm14In0.gPtqHVVmzVOMhgPVRLK2aw';
+    
+        const geojson = {
+            type: 'FeatureCollection',
+            features: [
+                {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [135.818333, 34.496389] // 天香久山
+                    },
+                    properties: {
+                        title: '持統天皇',
+                        description: '春すぎて 夏来にけらし 白妙の 衣ほすてふ 天の香具山'
+                    }
+                },
+                {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [135.5117, 35.0104] // 滋賀県大津市
+                    },
+                    properties: {
+                        title: '蝉丸',
+                        description: 'これやこの 行くも帰るも 別れては しるもしらぬも 逢坂の関'
+                    }
+                },
+                {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [135.5109,34.4053] // 奈良県奈良市
+                    },
+                    properties: {
+                        title: '安倍仲麿',
+                        description: '	天の原 ふりさけ見れば 春日なる 三笠の山に 出でし月かも'
+                    }
+                },
+                {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [135.5113, 34.5343] // 京都府宇治市
+                    },
+                    properties: {
+                        title: '喜撰法師',
+                        description: '	わが庵は 都のたつみ しかぞ住む 世を宇治山と 人はいふなり'
+                    }
+                },
+                {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [134.1329, 35.2928] // 鳥取県鳥取市  
+                    },
+                    properties: {
+                        title: '中納言行平',
+                        description: 'たち別れ いなばの山の 峰に生ふる まつとしきかば 今帰り来む'
+                    }
+                },
+                {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [135.7167, 34.6073] //  奈良県生駒市 
+                    },
+                    properties: {
+                        title: '在原業平朝臣',
+                        description: 'ちはやぶる 神代もきかず 龍田川 からくれなゐに 水くくるとは'
+                    }
+                },                                                                
+                {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [135.4827, 34.6096] // 大阪府大阪市住之江区  
+                    },
+                    properties: {
+                        title: '藤原敏行朝臣',
+                        description: '住の江の 岸に寄る波 よるさへや 夢の通ひ路 人目よくらむ'
+                    }
+                },
+                {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [135.5138, 34.2334] // 奈良県吉野郡吉野町他  
+                    },
+                    properties: {
+                        title: '坂上是則',
+                        description: '朝ぼらけ 有明の月と みるまでに 吉野の里に ふれる白雪'
+                    }
+                },
+                {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [134.7904, 34.7662] // 兵庫県高砂市  
+                    },
+                    properties: {
+                        title: '藤原興風',
+                        description: 'たれをかも 知る人にせむ 高砂の 松も昔の 友ならなくに'
+                    }
+                },                                
+            ]
+        };
+
+
+
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [135.4961, 34.7825], // 大阪府豊中市
+            zoom: 10
+        });
+
+
+
+
+
+        for (const feature of geojson.features) {
+            const el = document.createElement('div');
+            el.className = 'marker';
+
+            new mapboxgl.Marker(el)
+                .setLngLat(feature.geometry.coordinates)
+                .setPopup(
+                    new mapboxgl.Popup({ offset: 25 })
+                        .setHTML(
+                            `<h3>${feature.properties.title}</h3><p>${feature.properties.description}</p>`
+                        )
+                )
+                .addTo(map);
+        }
+
+
+
+        // 自分の好きな地点に短歌を投稿できる機能
+
+        map.on('click', (e) => {
+            const shortPoem = prompt('歌を詠む:');
+
+            if (shortPoem) {
+                const el = document.createElement('div');
+                el.className =
+                    'marker';
+                new mapboxgl.Marker(el)
+                    .setLngLat(e.lngLat.toArray())
+                    .setPopup(
+                        new mapboxgl.Popup({ offset: 25 })
+                            .setHTML(`<p>${shortPoem}</p>`)
+                    )
+
+                    .addTo(map);
+            }
+        });
+    </script>
+</body>
+
+
+
+</html>
